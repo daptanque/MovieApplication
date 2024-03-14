@@ -4,6 +4,7 @@ import com.example.movieapplication.data.datasource.MovieCacheDataSource
 import com.example.movieapplication.data.datasource.MovieLocalDataSource
 import com.example.movieapplication.data.datasource.MovieRemoteDataSource
 import com.example.movieapplication.data.model.Movie
+import com.example.movieapplication.data.model.MovieList
 import com.example.movieapplication.domain.repository.MovieRepository
 
 class MovieRepositoryImpl(
@@ -39,6 +40,26 @@ class MovieRepositoryImpl(
             }
         }catch (exception: Exception){
 
+        }
+
+        return movieList
+    }
+
+    suspend fun getMoviesFromRoom(): List<Movie> {
+        lateinit var movieList: List<Movie>
+
+        try {
+            movieList = movieLocalDataSource.getMoviesFromDB()
+
+        }catch (exception: Exception){
+
+        }
+
+        if(movieList.size > 0){
+            return movieList
+        }else{
+            movieList = getMoviesFromAPI()
+            movieLocalDataSource.saveMoviesToDB(movieList)
         }
 
         return movieList
