@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.movieapplication"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.movieapplication"
@@ -77,6 +77,8 @@ dependencies {
     //Glide
     implementation("com.github.bumptech.glide:glide:4.14.2")
     kapt("com.github.bumptech.glide:compiler:4.14.2")
+
+    implementation("com.google.code.gson:gson:2.10.1")
 
 
 
