@@ -1,6 +1,9 @@
 package com.example.movieapplication.data
 
+import androidx.room.Entity
 import com.google.gson.annotations.SerializedName
+
+@Entity(tableName="popular_movies")
 data class Movie(
     @SerializedName("id")
     val movieId: Int,

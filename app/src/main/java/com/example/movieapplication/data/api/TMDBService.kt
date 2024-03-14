@@ -13,9 +13,7 @@ interface TMDBService {
             "API_KEY"
         ) apiKey: String
     ) : Response<MovieList>
-    {
 
-    }
 
 
 
