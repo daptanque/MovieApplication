@@ -19,15 +19,33 @@ class MovieRepositoryImpl(
 
     override suspend fun updateMovies(): List<Movie>? {
         val newListOfMovies = getMoviesFromAPI()
+        movieLocalDataSource.clearAll()
+        movieLocalDataSource.saveMoviesToDB(newListOfMovies)
+        movieCacheDataSource.saveMoviesToCache(newListOfMovies)
+        return newListOfMovies
     }
 
 
 
 
-    private fun getMoviesFromCache(): List<Movie>? {
+    private suspend fun getMoviesFromCache(): List<Movie>? {
+        lateinit var movieList : List<Movie>
 
+        try{
+            movieList = movieCacheDataSource.getMoviesFromCache()
+        }catch (exception: Exception){
+
+        }
+
+        if(movieList.size > 0){
+            return movieList
+        }else{
+            movieList = getMoviesFromRoom()
+            movieCacheDataSource.saveMoviesToCache(movieList)
+        }
+
+        return movieList
     }
-
 
     suspend fun getMoviesFromAPI(): List<Movie> {
         lateinit var movieList: List<Movie>
@@ -64,4 +82,5 @@ class MovieRepositoryImpl(
 
         return movieList
     }
+
 }
