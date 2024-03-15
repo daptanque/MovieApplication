@@ -2,11 +2,64 @@ package com.example.movieapplication.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.movieapplication.R
+import com.example.movieapplication.databinding.ActivityMainBinding
+import com.example.movieapplication.presentation.di.Injector
+import okhttp3.internal.notify
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var factory: ViewModelFactory
+    private lateinit var movieViewModel: ViewModel
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var adapter: MovieAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        (application as Injector).createMovieSubComponent().inject(this)
+
+        movieViewModel = ViewModelProvider(this, factory)
+            .get(ViewModel::class.java)
+
+        initRecyclerView()
+
+
     }
+
+    private fun initRecyclerView() {
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        adapter = MovieAdapter()
+        binding.recyclerView.adapter = adapter
+        displayPopularMovies()
+    }
+
+    private fun displayPopularMovies() {
+        binding.movieProgressBar.visibility = View.VISIBLE
+        val responseLiveData = movieViewModel.getMovies()
+
+        responseLiveData.observe(this, Observer {
+            if(it != null){
+                adapter.setList(it)
+                adapter.notifyDataSetChanged()
+                binding.movieProgressBar.visibility = View.GONE
+            }else{
+                binding.movieProgressBar.visibility = View.GONE
+                Toast.makeText(applicationContext, "No data available", Toast.LENGTH_LONG).show()
+            }
+        })
+
+
+    }
+
+
 }
