@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var factory: ViewModelFactory
-    private lateinit var movieViewModel: ViewModel
+    private lateinit var movieViewModel: MyViewModel
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: MovieAdapter
 
@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         (application as Injector).createMovieSubComponent().inject(this)
 
         movieViewModel = ViewModelProvider(this, factory)
-            .get(ViewModel::class.java)
+            .get(MyViewModel::class.java)
 
         initRecyclerView()
 

@@ -5,7 +5,7 @@ import androidx.lifecycle.liveData
 import com.example.movieapplication.domain.usecases.GetMoviesUseCase
 import com.example.movieapplication.domain.usecases.UpdateMoviesUseCase
 
-open class ViewModel(
+open class MyViewModel(
     private val getMoviesUseCase: GetMoviesUseCase,
     private  val updateMoviesUseCase: UpdateMoviesUseCase
 ) : ViewModel(){
